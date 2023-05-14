@@ -1,10 +1,10 @@
 package com.hyeon.demo.controller;
 
-import com.hyeon.demo.model.Board;
+import com.hyeon.demo.dao.BoardRequest;
+import com.hyeon.demo.dto.Board;
 import com.hyeon.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,32 +23,16 @@ public class BoardController {
 
     @GetMapping()
     public ResponseEntity<List<Board>> findAllBoards() {
-        List<Board> boards = boardService.findAllBoards();
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
-
-    @GetMapping("/{tableId}")
-    public ResponseEntity<Board> findOneBoard(@PathVariable("tableId") String tableId) {
-        Board board = boardService.findOneBoard(tableId);
-        return new ResponseEntity<>(board, HttpStatus.OK);
+        List<Board> boards = boardService.findAll();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(boards);
     }
 
     @PostMapping()
-    public ResponseEntity<Board> insertBoard(@RequestBody Board board) {
-        boardService.insertBoard(board);
-        return new ResponseEntity<>(board, HttpStatus.OK);
-    }
-
-    @PutMapping()
-    public ResponseEntity<Board> updateBoard(@RequestBody Board board) {
-        boardService.updateBoard(board);
-        return new ResponseEntity<>(board, HttpStatus.OK);
-    }
-
-    @DeleteMapping()
-    public ResponseEntity<Board> deleteBoard(@RequestBody Board board) {
-        boardService.deleteBoard(board);
-        return new ResponseEntity<>(board, HttpStatus.OK);
+    public ResponseEntity<Board> addBoard(@RequestBody BoardRequest boardRequest) {
+        Board board = boardService.save(boardRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(board);
     }
 
 }

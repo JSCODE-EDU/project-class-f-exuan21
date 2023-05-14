@@ -1,6 +1,7 @@
 package com.hyeon.demo.service;
 
-import com.hyeon.demo.model.Board;
+import com.hyeon.demo.dao.BoardRequest;
+import com.hyeon.demo.dto.Board;
 import com.hyeon.demo.Repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,30 +19,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAllBoards() {
-        return this.repository.findAllBoards();
+    public List<Board> findAll() {
+        return repository.findAll();
     }
 
     @Override
-    public Board findOneBoard(String boardId) {
-        return this.repository.findOneBoard(boardId);
-    }
-
-    @Override
-    public Board insertBoard(Board board) {
-        this.repository.insertBoard(board);
-        return board;
-    }
-
-    @Override
-    public Board updateBoard(Board board) {
-         this.repository.updateBoard(board);
-         return board;
-    }
-
-    @Override
-    public Board deleteBoard(Board board) {
-        this.repository.deleteBoard(board.getId());
-        return board;
+    public Board save(BoardRequest boardRequest) {
+        return repository.save(boardRequest.toEntity());
     }
 }
