@@ -1,9 +1,12 @@
 package com.hyeon.demo.service;
 
 import com.hyeon.demo.dto.BoardRequest;
-import com.hyeon.demo.dao.Board;
+import com.hyeon.demo.Entity.Board;
 import com.hyeon.demo.Repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +22,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAll() {
-        return repository.findAll();
+    public List<Board> findAll(String title, String order, Pageable pageable) {
+        if(order.equalsIgnoreCase("DESC")) {
+            return repository.findByTitleContainingOrderByCreatedAtDesc(title, pageable);
+        } else {
+            return repository.findByTitleContainingOrderByCreatedAtAsc(title, pageable);
+        }
     }
 
     @Override

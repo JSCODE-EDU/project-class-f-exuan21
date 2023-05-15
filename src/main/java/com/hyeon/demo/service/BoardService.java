@@ -1,14 +1,16 @@
 package com.hyeon.demo.service;
 
 import com.hyeon.demo.dto.BoardRequest;
-import com.hyeon.demo.dao.Board;
+import com.hyeon.demo.Entity.Board;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 public interface BoardService {
 
     // 리스트 조회
-    List<Board> findAll();
+    List<Board> findAll(String title, String order, Pageable pageable);
 
     // 저장
     Board save(BoardRequest boardRequest);

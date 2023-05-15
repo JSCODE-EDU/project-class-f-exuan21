@@ -1,6 +1,6 @@
 package com.hyeon.demo.dto;
 
-import com.hyeon.demo.dao.Board;
+import com.hyeon.demo.Entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
