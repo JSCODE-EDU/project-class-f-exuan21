@@ -47,4 +47,10 @@ public class Board {
     protected Board() {
 
     }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
 }

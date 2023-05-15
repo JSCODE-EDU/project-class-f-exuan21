@@ -13,4 +13,12 @@ public interface BoardService {
     // 저장
     Board save(BoardRequest boardRequest);
 
+    // 특정 게시판 하나만 조회
+    Board findOne(int id);
+
+    // 수정
+    Board update(int id, BoardRequest boardRequest);
+
+    // 삭제
+    void delete(int id);
 }

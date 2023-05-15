@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/boards")
 public class BoardController {
 
     BoardService boardService;
@@ -33,6 +33,27 @@ public class BoardController {
         Board board = boardService.save(boardRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(board);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Board> findOneBoard(@PathVariable int id) {
+        Board board = boardService.findOne(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(board);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Board> updateBoard(@PathVariable int id, @RequestBody BoardRequest boardRequest) {
+        Board board = boardService.update(id, boardRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(board);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBoard(@PathVariable int id) {
+        boardService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 
 }
