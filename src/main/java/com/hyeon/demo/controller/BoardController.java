@@ -1,7 +1,7 @@
 package com.hyeon.demo.controller;
 
-import com.hyeon.demo.dao.BoardRequest;
-import com.hyeon.demo.dto.Board;
+import com.hyeon.demo.dto.BoardRequest;
+import com.hyeon.demo.dao.Board;
 import com.hyeon.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
