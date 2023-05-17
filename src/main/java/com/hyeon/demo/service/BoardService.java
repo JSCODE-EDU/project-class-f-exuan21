@@ -22,5 +22,5 @@ public interface BoardService {
     Board update(int id, BoardRequest boardRequest);
 
     // 삭제
-    void delete(int id);
+    boolean delete(int id);
 }

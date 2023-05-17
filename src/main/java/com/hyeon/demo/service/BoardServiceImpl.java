@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class BoardServiceImpl implements BoardService {
 
@@ -38,7 +40,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Board findOne(int id) {
         return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+                .orElse(null);
     }
 
     @Override
@@ -51,7 +53,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void delete(int id) {
-        repository.deleteById(id);
+    public boolean delete(int id) {
+        Optional<Board> board = repository.findById(id);
+        if(board.isPresent()) {
+            repository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
