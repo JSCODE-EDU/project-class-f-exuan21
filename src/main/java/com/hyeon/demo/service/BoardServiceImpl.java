@@ -41,13 +41,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public boolean update(int id, BoardRequest boardRequest) {
+    public Board update(int id, BoardRequest boardRequest) {
         Optional<Board> board = repository.findById(id);
         if(board.isPresent()) {
             board.get().update(boardRequest.getTitle(), boardRequest.getContent());
-            return true;
+            return board.get();
         } else {
-            return false;
+            return null;
         }
     }
 

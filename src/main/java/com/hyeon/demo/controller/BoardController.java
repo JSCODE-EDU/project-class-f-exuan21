@@ -34,7 +34,7 @@ public class BoardController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> addBoard(@Validated @RequestBody BoardRequest boardRequest) {
+    public ResponseEntity<Board> addBoard(@Validated @RequestBody BoardRequest boardRequest) {
         Board board = boardService.save(boardRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(board);
@@ -53,13 +53,13 @@ public class BoardController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBoard(@PathVariable("id") int id, @Validated @RequestBody BoardRequest boardRequest) {
-        boolean isUpdated = boardService.update(id, boardRequest);
-        if(!isUpdated) {
+        Board board = boardService.update(id, boardRequest);
+        if(board == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Invalid Board Id.");
         }
         return ResponseEntity.status(HttpStatus.OK)
-                .build();
+                .body(board);
     }
 
     @DeleteMapping("/{id}")

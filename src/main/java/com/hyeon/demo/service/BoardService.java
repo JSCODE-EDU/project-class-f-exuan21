@@ -19,7 +19,7 @@ public interface BoardService {
     Board findOne(int id);
 
     // 수정
-    boolean update(int id, BoardRequest boardRequest);
+    Board update(int id, BoardRequest boardRequest);
 
     // 삭제
     boolean delete(int id);
