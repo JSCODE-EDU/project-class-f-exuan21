@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
-    List<Board> findByTitleContainingOrderByCreatedAtDesc(String title, Pageable pageable);
-
-    List<Board> findByTitleContainingOrderByCreatedAtAsc(String title, Pageable pageable);
+    List<Board> findByTitleContaining(String title, Pageable pageable);
 
 }

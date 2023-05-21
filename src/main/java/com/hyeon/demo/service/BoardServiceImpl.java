@@ -24,12 +24,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAll(String title, String order, Pageable pageable) {
-        if(order.equalsIgnoreCase("DESC")) {
-            return repository.findByTitleContainingOrderByCreatedAtDesc(title, pageable);
-        } else {
-            return repository.findByTitleContainingOrderByCreatedAtAsc(title, pageable);
-        }
+    public List<Board> findAll(String title, Pageable pageable) {
+        return repository.findByTitleContaining(title, pageable);
     }
 
     @Override
@@ -45,11 +41,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Board update(int id, BoardRequest boardRequest) {
-        Board board = repository.findById(id)
-                        .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        board.update(boardRequest.getTitle(), boardRequest.getContent());
-        return board;
+    public boolean update(int id, BoardRequest boardRequest) {
+        Optional<Board> board = repository.findById(id);
+        if(board.isPresent()) {
+            board.get().update(boardRequest.getTitle(), boardRequest.getContent());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

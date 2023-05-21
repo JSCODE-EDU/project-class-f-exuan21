@@ -3,6 +3,7 @@ package com.hyeon.demo.controller;
 import com.hyeon.demo.dto.BoardRequest;
 import com.hyeon.demo.Entity.Board;
 import com.hyeon.demo.service.BoardService;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,19 +27,14 @@ public class BoardController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Board>> findAllBoards(@RequestParam String title, @RequestParam String order, Pageable pageable) {
-        List<Board> boards = boardService.findAll(title, order, pageable);
+    public ResponseEntity<?> findAllBoards(@RequestParam("title") String title, Pageable pageable) {
+        List<Board> boards = boardService.findAll(title.trim(), pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boards);
     }
 
     @PostMapping()
-    public ResponseEntity<?> addBoard(@Validated @RequestBody BoardRequest boardRequest, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            List<String> errorMessages = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(errorMessages);
-        }
+    public ResponseEntity<?> addBoard(@Validated @RequestBody BoardRequest boardRequest) {
         Board board = boardService.save(boardRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(board);
@@ -56,15 +52,14 @@ public class BoardController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBoard(@PathVariable int id, @Validated @RequestBody BoardRequest boardRequest, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            List<String> errorMessages = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
+    public ResponseEntity<?> updateBoard(@PathVariable("id") int id, @Validated @RequestBody BoardRequest boardRequest) {
+        boolean isUpdated = boardService.update(id, boardRequest);
+        if(!isUpdated) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(errorMessages);
+                    .body("Invalid Board Id.");
         }
-        Board board = boardService.update(id, boardRequest);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(board);
+                .build();
     }
 
     @DeleteMapping("/{id}")

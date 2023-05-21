@@ -2,6 +2,7 @@ package com.hyeon.demo.dto;
 
 import com.hyeon.demo.Entity.Board;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class BoardRequest {
 
-    @NotBlank(message = "Title must not be null.")
+    @NotBlank(message = "제목은 NULL이 아니어야 합니다.")
     private String title;
-    @NotBlank(message = "Content must not be null.")
+
+    @Size(min = 1, max = 1000)
     private String content;
 
     public Board toEntity() {
