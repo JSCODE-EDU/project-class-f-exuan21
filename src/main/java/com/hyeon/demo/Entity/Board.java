@@ -1,4 +1,4 @@
-package com.hyeon.demo.dao;
+package com.hyeon.demo.Entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

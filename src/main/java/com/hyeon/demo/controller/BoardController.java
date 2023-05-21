@@ -1,9 +1,10 @@
 package com.hyeon.demo.controller;
 
 import com.hyeon.demo.dto.BoardRequest;
-import com.hyeon.demo.dao.Board;
+import com.hyeon.demo.Entity.Board;
 import com.hyeon.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class BoardController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Board>> findAllBoards() {
-        List<Board> boards = boardService.findAll();
+    public ResponseEntity<List<Board>> findAllBoards(@RequestParam String title, @RequestParam String order, Pageable pageable) {
+        List<Board> boards = boardService.findAll(title, order, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boards);
     }
