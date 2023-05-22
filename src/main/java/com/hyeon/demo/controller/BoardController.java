@@ -3,6 +3,7 @@ package com.hyeon.demo.controller;
 import com.hyeon.demo.dto.BoardRequest;
 import com.hyeon.demo.Entity.Board;
 import com.hyeon.demo.service.BoardService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/boards")
+@Validated
 public class BoardController {
 
     BoardService boardService;
