@@ -10,7 +10,7 @@ import java.util.List;
 public interface BoardService {
 
     // 리스트 조회
-    List<Board> findAll(String title, String order, Pageable pageable);
+    List<Board> findAll(String title, Pageable pageable);
 
     // 저장
     Board save(BoardRequest boardRequest);
@@ -22,5 +22,5 @@ public interface BoardService {
     Board update(int id, BoardRequest boardRequest);
 
     // 삭제
-    void delete(int id);
+    boolean delete(int id);
 }

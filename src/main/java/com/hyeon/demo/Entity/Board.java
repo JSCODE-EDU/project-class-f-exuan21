@@ -17,13 +17,13 @@ public class Board {
 
     @Id // PK로 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 자동으로 1씩 증가
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     private String content;
 
     @CreationTimestamp

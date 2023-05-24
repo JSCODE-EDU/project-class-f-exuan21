@@ -3,16 +3,22 @@ package com.hyeon.demo.controller;
 import com.hyeon.demo.dto.BoardRequest;
 import com.hyeon.demo.Entity.Board;
 import com.hyeon.demo.service.BoardService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/boards")
+@Validated
 public class BoardController {
 
     BoardService boardService;
@@ -23,36 +29,48 @@ public class BoardController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Board>> findAllBoards(@RequestParam String title, @RequestParam String order, Pageable pageable) {
-        List<Board> boards = boardService.findAll(title, order, pageable);
+    public ResponseEntity<?> findAllBoards(@RequestParam("title") String title, Pageable pageable) {
+        List<Board> boards = boardService.findAll(title.trim(), pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boards);
     }
 
     @PostMapping()
-    public ResponseEntity<Board> addBoard(@RequestBody BoardRequest boardRequest) {
+    public ResponseEntity<Board> addBoard(@Validated @RequestBody BoardRequest boardRequest) {
         Board board = boardService.save(boardRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(board);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Board> findOneBoard(@PathVariable int id) {
+    public ResponseEntity<?> findOneBoard(@PathVariable int id) {
         Board board = boardService.findOne(id);
+        if(board == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Invalid Board Id.");
+        }
         return ResponseEntity.status(HttpStatus.OK)
                 .body(board);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Board> updateBoard(@PathVariable int id, @RequestBody BoardRequest boardRequest) {
+    public ResponseEntity<?> updateBoard(@PathVariable("id") int id, @Validated @RequestBody BoardRequest boardRequest) {
         Board board = boardService.update(id, boardRequest);
+        if(board == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Invalid Board Id.");
+        }
         return ResponseEntity.status(HttpStatus.OK)
                 .body(board);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable int id) {
-        boardService.delete(id);
+    public ResponseEntity<?> deleteBoard(@PathVariable int id) {
+        boolean isDeleted = boardService.delete(id);
+        if(!isDeleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Invalid Board Id.");
+        }
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
