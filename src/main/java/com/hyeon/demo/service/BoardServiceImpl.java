@@ -3,14 +3,16 @@ package com.hyeon.demo.service;
 import com.hyeon.demo.dto.BoardRequest;
 import com.hyeon.demo.Entity.Board;
 import com.hyeon.demo.Repository.BoardRepository;
+import com.hyeon.demo.exception.ErrorCode;
+import com.hyeon.demo.exception.domain.MyCustomException;
+import org.hibernate.dialect.identity.MySQLIdentityColumnSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class BoardServiceImpl implements BoardService {
 
@@ -22,12 +24,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAll(String title, String order, Pageable pageable) {
-        if(order.equalsIgnoreCase("DESC")) {
-            return repository.findByTitleContainingOrderByCreatedAtDesc(title, pageable);
-        } else {
-            return repository.findByTitleContainingOrderByCreatedAtAsc(title, pageable);
-        }
+    public List<Board> findAll(String title, Pageable pageable) {
+        return repository.findByTitleContaining(title, pageable);
     }
 
     @Override
@@ -38,20 +36,28 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Board findOne(int id) {
         return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+                .orElseThrow(() -> new MyCustomException(ErrorCode.NOT_FOUND));
     }
 
     @Override
-    @Transactional
     public Board update(int id, BoardRequest boardRequest) {
-        Board board = repository.findById(id)
-                        .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        board.update(boardRequest.getTitle(), boardRequest.getContent());
-        return board;
+        Optional<Board> board = repository.findById(id);
+        if(board.isPresent()) {
+            board.get().update(boardRequest.getTitle(), boardRequest.getContent());
+            return board.get();
+        } else {
+            throw new MyCustomException(ErrorCode.NOT_FOUND);
+        }
     }
 
     @Override
-    public void delete(int id) {
-        repository.deleteById(id);
+    public boolean delete(int id) {
+        Optional<Board> board = repository.findById(id);
+        if(board.isPresent()) {
+            repository.deleteById(id);
+            return true;
+        } else {
+            throw new MyCustomException(ErrorCode.NOT_FOUND);
+        }
     }
 }
