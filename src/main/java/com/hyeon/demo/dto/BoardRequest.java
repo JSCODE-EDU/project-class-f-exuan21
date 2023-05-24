@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class BoardRequest {
 
     @NotBlank(message = "제목은 NULL이 아니어야 합니다.")
+    @Size(max = 15)
     private String title;
 
     @Size(min = 1, max = 1000)
